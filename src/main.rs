@@ -1,5 +1,6 @@
 #![allow(unused)]
 
+use anyhow::{Context, Result};
 use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -14,12 +15,13 @@ struct Cli {
     path: std::path::PathBuf,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let start_time = Instant::now();
 
     let args = Cli::parse();
-    let file = File::open(&args.path).expect("could not read file");
-    let reader = BufReader::new(file);
+    let file = File::open(&args.path)
+        .with_context(|| format!("could not open file `{}`", args.path.display()));
+    let reader = BufReader::new(file.context("could not read file")?);
 
     for line_result in reader.lines() {
         match line_result {
@@ -29,11 +31,12 @@ fn main() {
                 }
             }
             Err(e) => {
-                eprintln!("Error reading line: {}", e);
+                eprintln!("could not read line: {}", e);
             }
         }
     }
 
     let elapsed = start_time.elapsed();
     println!("\nElapsed: {:?}", elapsed);
+    Ok(())
 }
