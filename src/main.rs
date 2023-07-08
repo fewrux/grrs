@@ -41,12 +41,15 @@ fn main() -> Result<()> {
     trace!("opening the file - size: {}", file_size);
     let file = File::open(&args.path)
         .with_context(|| format!("could not open file `{}`", args.path.display()));
+
+    trace!("creating a buffer reader");
     let reader = BufReader::new(file.context("could not read file")?);
 
+    trace!("creating a buffer writer");
     let stdout = io::stdout();
     let mut handle = io::BufWriter::new(stdout.lock());
 
-    trace!("reading the file");
+    trace!("starting to read the file");
     for line_result in reader.lines() {
         let new = min(amount_processed + (file_size / 100), file_size);
         pb.inc(new);
@@ -67,8 +70,9 @@ fn main() -> Result<()> {
         thread::sleep(Duration::from_millis(5));
     }
 
-    pb.finish_with_message("Done!\n");
     let elapsed = start_time.elapsed();
+    info!("finished in {:?}\n", elapsed);
+    pb.finish_with_message("Done!\n");
     println!("  - Finished in {:?}\n", elapsed);
     Ok(())
 }
