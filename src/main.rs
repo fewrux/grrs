@@ -9,6 +9,7 @@ use std::{cmp::min, fmt::Write};
 use anyhow::{Context, Result};
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressState, ProgressStyle};
+use log::{info, trace, warn};
 
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser)]
@@ -28,6 +29,7 @@ fn main() -> Result<()> {
     let file_size = std::fs::metadata(&args.path)?.len();
     let pb = get_progress_bar(file_size);
 
+    trace!("opening the file - size: {}", file_size);
     let file = File::open(&args.path)
         .with_context(|| format!("could not open file `{}`", args.path.display()));
     let reader = BufReader::new(file.context("could not read file")?);
@@ -35,17 +37,21 @@ fn main() -> Result<()> {
     let stdout = io::stdout();
     let mut handle = io::BufWriter::new(stdout.lock());
 
+    trace!("reading the file");
     for line_result in reader.lines() {
         let new = min(processed + (file_size / 100), file_size);
         pb.set_position(new);
 
         match line_result {
             Ok(line) => {
+                trace!("read line: {}", line);
                 if line.contains(&args.pattern) {
+                    info!("found matching line: {}", line);
                     writeln!(handle, "{}", line);
                 }
             }
             Err(e) => {
+                warn!("could not read line: {}", e);
                 eprintln!("could not read line: {}", e);
             }
         }
