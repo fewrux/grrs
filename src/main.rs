@@ -11,23 +11,36 @@ use std::{cmp::min, fmt::Write};
 
 use anyhow::{Context, Result};
 use clap::Parser;
+use env_logger::Builder;
 use indicatif::{ProgressBar, ProgressState, ProgressStyle};
 use log::{info, trace, warn};
 
 /// Search for a pattern in a file and display the lines that contain it.
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 struct Cli {
     /// The pattern to look for
     pattern: String,
     /// The path to the file to read
     path: std::path::PathBuf,
+    #[clap(flatten)]
+    verbosity: clap_verbosity_flag::Verbosity,
 }
 
 fn main() -> Result<()> {
     let start_time = Instant::now();
-    env_logger::init();
 
     let args = Cli::parse();
+
+    let mut builder = Builder::from_default_env();
+    match args.verbosity.log_level() {
+        Some(log::Level::Error) => builder.filter(None, log::LevelFilter::Error),
+        Some(log::Level::Warn) => builder.filter(None, log::LevelFilter::Warn),
+        Some(log::Level::Info) => builder.filter(None, log::LevelFilter::Info),
+        Some(log::Level::Debug) => builder.filter(None, log::LevelFilter::Debug),
+        Some(log::Level::Trace) => builder.filter(None, log::LevelFilter::Trace),
+        _ => builder.filter(None, log::LevelFilter::Off),
+    };
+    builder.init();
 
     let mut processed = 0;
     let file_size = std::fs::metadata(&args.path)?.len();
