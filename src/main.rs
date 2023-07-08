@@ -1,5 +1,8 @@
 #![allow(unused)]
 
+#[macro_use]
+extern crate log;
+
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Write as BufWrite};
 use std::thread;
@@ -22,6 +25,7 @@ struct Cli {
 
 fn main() -> Result<()> {
     let start_time = Instant::now();
+    env_logger::init();
 
     let args = Cli::parse();
 
