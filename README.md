@@ -1,7 +1,6 @@
 # grrs
 
-> <strong>grrs</strong> is a grep-like CLI tool implemented in Rust. It allows you to search
-> for a pattern in a file and display the lines that contain it.
+<strong>grrs</strong> is a grep-like CLI tool implemented in <strong>Rust</strong>. It allows you to search for a pattern in a file and display the lines that contain it.
 
 <br>
 
@@ -43,19 +42,21 @@ Replace <pattern> with the pattern you want to search for, and <path_to_file> wi
 
 <strong>grrs</strong> will read the file line by line, searching for the pattern in each line. It will display the lines that contain the pattern.
 
+<br>
+
 ## Options
 
 <strong>grrs</strong> supports the following options:
 
 <ul>
-  <li>`-q`: Silence the output. Only errors will be displayed.</li>
+  <li><strong>-q</strong>: Silence the output. Only errors will be displayed.</li>
   <li>
-    `-v`: Increase the verbosity level. Specify this flag multiple times to increase the verbosity level further. The available verbosity levels are as follows:
+    <strong>-v</strong>: Increase the verbosity level. Specify this flag multiple times to increase the verbosity level further.<br>The available verbosity levels are as follows:
     <ul>
-      <li>`-v`: Show warnings.</li>
-      <li>`-vv`: Show info.</li>
-      <li>`-vvv`: Show debug.</li>
-      <li>`-vvvv`: Show trace.</li>
+      <li><strong>-v</strong>: Show warnings.</li>
+      <li><strong>-vv</strong>: Show info.</li>
+      <li><strong>-vvv</strong>: Show debug.</li>
+      <li><strong>-vvvv</strong>: Show trace.</li>
     </ul>
   </li>
 </ul>
@@ -64,7 +65,7 @@ Replace <pattern> with the pattern you want to search for, and <path_to_file> wi
 
 ## Examples
 
--   Search for the pattern "error" in the file /path/to/file.log and display only the lines containing the pattern (silencing the output):
+-   Search for the pattern "error" in the file `/path/to/file.log` and display only the lines containing the pattern (silencing the output):
 
 ```
 $ ./target/release/grrs "error" /path/to/file.log -q
@@ -72,7 +73,7 @@ $ ./target/release/grrs "error" /path/to/file.log -q
 
 <br>
 
--   Search for the pattern "TODO" in the directory /path/to/project recursively, showing warnings and info messages:
+-   Search for the pattern "TODO" in the directory `/path/to/project`, showing warnings and info messages:
 
 ```
 $ ./target/release/grrs "TODO" /path/to/project -vv
@@ -96,12 +97,14 @@ Feel free to adjust the verbosity flag commands or provide additional examples t
 
 <strong>grrs</strong> has the following dependencies:
 
--   `clap` (version 4.2.7) - A powerful and flexible command-line argument parsing library for Rust. It is used to parse command-line arguments.
--   `anyhow` (version 1.0.71) - A library for representing and handling errors in a convenient way. It is used to handle errors and provide meaningful error messages.
--   `indicatif` (version 0.17.3) - A library for creating interactive command-line progress bars. It is used to display the progress of reading the file.
--   `log` (version 0.4.17) - A lightweight logging facade for Rust. It is used for logging messages at different verbosity levels.
--   `env_logger` (version 0.10.0) - A logger implementation for the log crate that is based on environment variables. It is used to configure and display log messages.
--   `clap-verbosity-flag` (version 2.0.1) - A library for parsing verbosity level command-line arguments. It is used to set the verbosity level of the logger.
+-   [clap](https://crates.io/crates/clap) - A powerful and flexible command-line argument parsing library for Rust. It is used to parse command-line arguments.
+-   [anyhow](https://crates.io/crates/anyhow) - A library for representing and handling errors in a convenient way. It is used to handle errors and provide meaningful error messages.
+-   [indicatif](https://crates.io/crates/indicatif) - A library for creating interactive command-line progress bars. It is used to display the progress of reading the file.
+-   [log](https://crates.io/crates/log) - A lightweight logging facade for Rust. It is used for logging messages at different verbosity levels.
+-   [env_logger](https://crates.io/crates/env_logger) - A logger implementation for the log crate that is based on environment variables. It is used to configure and display log messages.
+-   [clap-verbosity-flag](https://crates.io/crates/clap-verbosity-flag) - A library for parsing verbosity level command-line arguments. It is used to set the verbosity level of the logger.
+
+<br>
 
 These dependencies are automatically managed by Cargo, the Rust package manager.
 
@@ -147,7 +150,7 @@ Feel free to modify and customize the dependencies as per your project's require
 
 ## How It Works
 
-1. <strong>grrs</strong> reads the command-line arguments to get the pattern and file path.
+1. <strong>grrs</strong></a> reads the command-line arguments to get the pattern and file path.
 2. Configures the logger based on the verbosity level specified in the command-line arguments.
 3. Opens the file and creates a buffer reader to read the file line by line.
 4. Configures and displays a progress bar based on the size of the file.
