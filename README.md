@@ -9,6 +9,7 @@
 
 -   [Installation](#installation)
 -   [Usage](#usage)
+-   [Options](#options)
 -   [Examples](#examples)
 -   [Features](#features)
 -   [Dependencies](#dependencies)
@@ -33,23 +34,53 @@ This will create an executable file in the target/release/ directory.
 ## Usage
 
 To use <strong>grrs</strong> CLI tool, run the following command:
-`$ ./target/release/grrs <pattern> <path_to_file>`
+
+```
+$ ./target/release/grrs <pattern> <path_to_file> [OPTIONS]
+```
 
 Replace <pattern> with the pattern you want to search for, and <path_to_file> with the path to the file you want to search in.
 
-The tool will read the file line by line, searching for the pattern in each line. It will display the lines that contain the pattern.
+<strong>grrs</strong> will read the file line by line, searching for the pattern in each line. It will display the lines that contain the pattern.
+
+## Options
+
+<strong>grrs</strong> supports the following options:
+
+<ul>
+  <li>`-q`: Silence the output. Only errors will be displayed.</li>
+  <li>
+    `-v`: Increase the verbosity level. Specify this flag multiple times to increase the verbosity level further. The available verbosity levels are as follows:
+    <ul>
+      <li>`-v`: Show warnings.</li>
+      <li>`-vv`: Show info.</li>
+      <li>`-vvv`: Show debug.</li>
+      <li>`-vvvv`: Show trace.</li>
+    </ul>
+  </li>
+</ul>
 
 <br>
 
 ## Examples
 
-Here are a few examples of how to use the grep-like CLI tool:
+-   Search for the pattern "error" in the file /path/to/file.log and display only the lines containing the pattern (silencing the output):
 
-`$ ./target/release/grrs "error" /path/to/file.log`
+```
+$ ./target/release/grrs "error" /path/to/file.log -q
+```
 
 <br>
 
-`$ ./target/release/grrs "TODO" /path/to/project -vv`
+-   Search for the pattern "TODO" in the directory /path/to/project recursively, showing warnings and info messages:
+
+```
+$ ./target/release/grrs "TODO" /path/to/project -vv
+```
+
+<br>
+
+Feel free to adjust the verbosity flag commands or provide additional examples to match your tool's functionality and use cases.
 
 <br>
 
@@ -63,7 +94,7 @@ Here are a few examples of how to use the grep-like CLI tool:
 
 ## Dependencies
 
-The tool has the following dependencies:
+<strong>grrs</strong> has the following dependencies:
 
 -   `clap` (version 4.2.7) - A powerful and flexible command-line argument parsing library for Rust. It is used to parse command-line arguments.
 -   `anyhow` (version 1.0.71) - A library for representing and handling errors in a convenient way. It is used to handle errors and provide meaningful error messages.
@@ -96,19 +127,19 @@ Feel free to modify and customize the dependencies as per your project's require
 
 ## Error Handling
 
-The tool handles errors gracefully. If there is an error reading a line or opening a file, a warning message is logged, and an error message is printed to the console. The tool continues processing the remaining lines in the file.
+<strong>grrs</strong> handles errors gracefully. If there is an error reading a line or opening a file, a warning message is logged, and an error message is printed to the console. The tool continues processing the remaining lines in the file.
 
 <br>
 
 ## Performance Considerations
 
-The tool is designed to handle large files efficiently. It reads the file line by line, minimizing memory usage. Additionally, it uses a progress bar to provide visual feedback on the progress of reading the file.
+<strong>grrs</strong> is designed to handle large files efficiently. It reads the file line by line, minimizing memory usage. Additionally, it uses a progress bar to provide visual feedback on the progress of reading the file.
 
 <br>
 
 ## Limitations
 
--   The tool currently only supports searching for patterns within text files. It may not work as expected for binary files.
+-   <strong>grrs</strong> currently only supports searching for patterns within text files. It may not work as expected for binary files.
 -   The search functionality is case-sensitive. It does not support case-insensitive searching.
 -   The tool may experience performance degradation with extremely large files or in low-memory environments.
 
@@ -116,15 +147,14 @@ The tool is designed to handle large files efficiently. It reads the file line b
 
 ## How It Works
 
-1. The tool reads the command-line arguments to get the pattern and file path.
-2. It configures the logger based on the verbosity level specified in the command-line arguments.
-3. The tool opens the file and creates a buffer reader to read the file line by line.
-4. It configures and displays a progress bar based on the size of the file.
-5. The tool iterates over each line in the file, checking if the line contains the specified pattern.
+1. <strong>grrs</strong> reads the command-line arguments to get the pattern and file path.
+2. Configures the logger based on the verbosity level specified in the command-line arguments.
+3. Opens the file and creates a buffer reader to read the file line by line.
+4. Configures and displays a progress bar based on the size of the file.
+5. Iterates over each line in the file, checking if the line contains the specified pattern.
 6. If a line contains the pattern, it is displayed, and the line is written to the output file.
 7. If there is an error reading a line, a warning message is logged, and an error message is printed.
-8. The tool sleeps for a short duration after processing each line to allow the progress bar to update.
-9. Once all lines in the file have been processed, the elapsed time is logged, and the progress bar is finished.
-10. The tool prints a message indicating the completion and the total elapsed time.
+8. Once all lines in the file have been processed, the elapsed time is logged, and the progress bar is finished.
+9. Prints a message indicating the completion and the total elapsed time.
 
-That's it! You can now use the Rust grep-like CLI tool to search for patterns in files efficiently.
+That's it! You can now use the Rust <strong>grrs</strong> CLI tool to search for patterns in files efficiently.
