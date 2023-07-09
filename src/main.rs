@@ -99,3 +99,13 @@ fn config_logger(args: &Cli) -> Builder {
     builder.init();
     builder
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn should_return_pattern() {
+        let args = Cli::parse_from(&["test", "pattern", "path"]);
+        assert_eq!(args.pattern, "pattern");
+    }
+}
