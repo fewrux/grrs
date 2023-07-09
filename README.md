@@ -1,7 +1,9 @@
-# grrs - Rust
+# grrs
 
 > <strong>grrs</strong> is a grep-like CLI tool implemented in Rust. It allows you to search
 > for a pattern in a file and display the lines that contain it.
+
+<br>
 
 ## Table of Contents
 
@@ -15,6 +17,8 @@
 -   [Limitations](#limitations)
 -   [How It Works](#how-it-works)
 
+<br>
+
 ## Installation
 
 To use this tool, you need to have Rust installed on your system. If you don't have Rust installed, you can install it by following the instructions at [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install).
@@ -23,6 +27,8 @@ Once you have Rust installed, you can build the tool using the following command
 `$ cargo build --release`
 
 This will create an executable file in the target/release/ directory.
+
+<br>
 
 ## Usage
 
@@ -33,19 +39,27 @@ Replace <pattern> with the pattern you want to search for, and <path_to_file> wi
 
 The tool will read the file line by line, searching for the pattern in each line. It will display the lines that contain the pattern.
 
+<br>
+
 ## Examples
 
 Here are a few examples of how to use the grep-like CLI tool:
 
 `$ ./target/release/grrs "error" /path/to/file.log`
 
+<br>
+
 `$ ./target/release/grrs "TODO" /path/to/project -vv`
+
+<br>
 
 ## Features
 
 -   Search for a pattern in a file and display the lines that contain it.
 -   Progress bar: The tool displays a progress bar that shows the progress of reading the file.
 -   Logging: The tool uses the `env_logger` crate to configure and display log messages at different verbosity levels.
+
+<br>
 
 ## Dependencies
 
@@ -78,19 +92,27 @@ These dependencies provide essential functionality and enable features such as c
 
 Feel free to modify and customize the dependencies as per your project's requirements.
 
+<br>
+
 ## Error Handling
 
 The tool handles errors gracefully. If there is an error reading a line or opening a file, a warning message is logged, and an error message is printed to the console. The tool continues processing the remaining lines in the file.
 
+<br>
+
 ## Performance Considerations
 
 The tool is designed to handle large files efficiently. It reads the file line by line, minimizing memory usage. Additionally, it uses a progress bar to provide visual feedback on the progress of reading the file.
+
+<br>
 
 ## Limitations
 
 -   The tool currently only supports searching for patterns within text files. It may not work as expected for binary files.
 -   The search functionality is case-sensitive. It does not support case-insensitive searching.
 -   The tool may experience performance degradation with extremely large files or in low-memory environments.
+
+<br>
 
 ## How It Works
 
@@ -106,39 +128,3 @@ The tool is designed to handle large files efficiently. It reads the file line b
 10. The tool prints a message indicating the completion and the total elapsed time.
 
 That's it! You can now use the Rust grep-like CLI tool to search for patterns in files efficiently.
-
-<!--
-## Features
-<ul>
-  <li>Find the first occurrence of a given pattern in a file</li>
-  <li>[] Search all occurrences of the given pattern</li>
-  <li>[] Count the total number of occurrences </li>
-</ul>
-
-<br>
-
-## How to use
-
-This is the main command base structure:
-`cargo run <pattern_to_search> <path_to_file>`
-
-<br>
-
-<ol>
-  <li>Replace the `<pattern_to_search>` by the desired word, e.g. "main"</li>
-  <li>Replace the `<path_to_file>` by the path to the desired file, e.g. "src/main.rs"</li>
-</ol>
-
-<br>
-
-The above command should return:
-
-```
-    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
-     Running `target/debug/grrs main src/main.rs`
-  [00:00:00] [##################################################################################] 3.23 KiB/3.23 KiB (0.0s)
-  - Finished in 542.477144ms
-
-fn main() -> Result<()> {
-```
--->
