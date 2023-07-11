@@ -50,6 +50,7 @@ fn main() -> Result<()> {
     let mut handle = io::BufWriter::new(stdout.lock());
 
     trace!("starting to read the file");
+    // find_matches(&args.pattern, reader, handle, file_size, &pb);
     for line_result in reader.lines() {
         let new = min(amount_processed + (file_size / 100), file_size);
         pb.inc(new);
@@ -72,9 +73,38 @@ fn main() -> Result<()> {
 
     let elapsed = start_time.elapsed();
     info!("finished in {:?}\n", elapsed);
-    pb.finish_with_message("Done!\n");
+    pb.finish();
     println!("  - Finished in {:?}\n", elapsed);
     Ok(())
+}
+
+fn find_matches(
+    pattern: &str,
+    mut reader: impl std::io::BufRead,
+    mut handle: impl std::io::Write,
+    file_size: u64,
+    pb: &ProgressBar,
+) {
+    let mut amount_processed = 0;
+    for line_result in reader.lines() {
+        let new = min(amount_processed + (file_size / 100), file_size);
+        pb.inc(new);
+
+        match line_result {
+            Ok(line) => {
+                trace!("read line: {}", line);
+                if line.contains(pattern) {
+                    info!("found matching line: {}", line);
+                    writeln!(handle, "{}", line);
+                }
+            }
+            Err(e) => {
+                warn!("could not read line: {}", e);
+                eprintln!("could not read line: {}", e);
+            }
+        }
+        thread::sleep(Duration::from_millis(5));
+    }
 }
 
 fn config_progress_bar(file_size: u64) -> ProgressBar {
