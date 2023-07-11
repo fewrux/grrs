@@ -12,7 +12,6 @@ use std::{cmp::min, fmt::Write};
 use anyhow::{Context, Result};
 use clap::Parser;
 use env_logger::Builder;
-use indicatif::{ProgressBar, ProgressState, ProgressStyle};
 use log::{info, trace, warn};
 
 /// Search for a pattern in a file and display the lines that contain it.
@@ -29,92 +28,47 @@ struct Cli {
 fn main() -> Result<()> {
     let start_time = Instant::now();
 
+    trace!("parsing command line arguments");
     let args = Cli::parse();
 
+    trace!("configuring logger");
     let mut builder = config_logger(&args);
 
-    let mut amount_processed = 0;
     let file_size = std::fs::metadata(&args.path)?.len();
 
-    let pb = config_progress_bar(file_size);
+    trace!("opening file - size: {}", file_size);
+    let content = std::fs::read_to_string(&args.path)
+        .with_context(|| format!("could not read file `{}`", args.path.display()))?;
 
-    trace!("opening the file - size: {}", file_size);
-    let file = File::open(&args.path)
-        .with_context(|| format!("could not open file `{}`", args.path.display()));
+    trace!("creating buffer writer");
+    let mut writer = io::BufWriter::new(io::stdout().lock());
 
-    trace!("creating a buffer reader");
-    let reader = BufReader::new(file.context("could not read file")?);
-
-    trace!("creating a buffer writer");
-    let stdout = io::stdout();
-    let mut handle = io::BufWriter::new(stdout.lock());
-
-    trace!("starting to read the file");
-    // find_matches(&args.pattern, reader, handle, file_size, &pb);
-    for line_result in reader.lines() {
-        let new = min(amount_processed + (file_size / 100), file_size);
-        pb.inc(new);
-
-        match line_result {
-            Ok(line) => {
-                trace!("read line: {}", line);
-                if line.contains(&args.pattern) {
-                    info!("found matching line: {}", line);
-                    writeln!(handle, "{}", line);
-                }
-            }
-            Err(e) => {
-                warn!("could not read line: {}", e);
-                eprintln!("could not read line: {}", e);
-            }
-        }
-        thread::sleep(Duration::from_millis(5));
-    }
+    trace!("reading file");
+    find_matches(&content, &args.pattern, writer);
 
     let elapsed = start_time.elapsed();
-    info!("finished in {:?}\n", elapsed);
-    pb.finish();
-    println!("  - Finished in {:?}\n", elapsed);
+    info!("finished in {:?}", elapsed);
     Ok(())
 }
 
-fn find_matches(
-    pattern: &str,
-    mut reader: impl std::io::BufRead,
-    mut handle: impl std::io::Write,
-    file_size: u64,
-    pb: &ProgressBar,
-) {
-    let mut amount_processed = 0;
-    for line_result in reader.lines() {
-        let new = min(amount_processed + (file_size / 100), file_size);
-        pb.inc(new);
-
-        match line_result {
-            Ok(line) => {
-                trace!("read line: {}", line);
-                if line.contains(pattern) {
-                    info!("found matching line: {}", line);
-                    writeln!(handle, "{}", line);
-                }
-            }
-            Err(e) => {
-                warn!("could not read line: {}", e);
-                eprintln!("could not read line: {}", e);
-            }
+fn find_matches(content: &str, pattern: &str, mut writer: impl std::io::Write) {
+    for line in content.lines() {
+        trace!("read line: {}", line);
+        if line.contains(pattern) {
+            info!("found matching line: {}", line);
+            writeln!(writer, "{}", line);
         }
-        thread::sleep(Duration::from_millis(5));
     }
 }
 
-fn config_progress_bar(file_size: u64) -> ProgressBar {
-    let pb = ProgressBar::new(file_size);
-    pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
-        .unwrap()
-        .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
-        .progress_chars("#>-"));
-    pb
-}
+// fn config_progress_bar(file_size: u64) -> ProgressBar {
+//     let pb = ProgressBar::new(file_size);
+//     pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+//         .unwrap()
+//         .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
+//         .progress_chars("#>-"));
+//     pb
+// }
 
 fn config_logger(args: &Cli) -> Builder {
     let mut builder = Builder::from_default_env();
@@ -133,9 +87,11 @@ fn config_logger(args: &Cli) -> Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
-    fn should_return_pattern() {
-        let args = Cli::parse_from(&["test", "pattern", "path"]);
-        assert_eq!(args.pattern, "pattern");
+    fn should_find_a_match() {
+        let mut result = Vec::new();
+        find_matches("lorem ipsum\ndolor sit amet", "lorem", &mut result);
+        assert_eq!(result, b"lorem ipsum\n");
     }
 }
