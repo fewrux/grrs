@@ -4,10 +4,7 @@
 extern crate log;
 
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Write as BufWrite};
-use std::thread;
 use std::time::{Duration, Instant};
-use std::{cmp::min, fmt::Write};
 
 use anyhow::{Context, Result};
 use clap::Parser;
@@ -40,14 +37,12 @@ fn main() -> Result<()> {
     let content = std::fs::read_to_string(&args.path)
         .with_context(|| format!("could not read file `{}`", args.path.display()))?;
 
-    trace!("creating buffer writer");
-    let mut writer = io::BufWriter::new(io::stdout().lock());
-
     trace!("reading file");
-    find_matches(&content, &args.pattern, writer);
+    find_matches(&content, &args.pattern, &mut std::io::stdout());
 
     let elapsed = start_time.elapsed();
     info!("finished in {:?}", elapsed);
+    println!("finished in {:?}", elapsed);
     Ok(())
 }
 
@@ -56,19 +51,11 @@ fn find_matches(content: &str, pattern: &str, mut writer: impl std::io::Write) {
         trace!("read line: {}", line);
         if line.contains(pattern) {
             info!("found matching line: {}", line);
-            writeln!(writer, "{}", line);
+            writeln!(writer, "{}", line)
+                .with_context(|| format!("could not write line `{}`", line));
         }
     }
 }
-
-// fn config_progress_bar(file_size: u64) -> ProgressBar {
-//     let pb = ProgressBar::new(file_size);
-//     pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
-//         .unwrap()
-//         .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
-//         .progress_chars("#>-"));
-//     pb
-// }
 
 fn config_logger(args: &Cli) -> Builder {
     let mut builder = Builder::from_default_env();
