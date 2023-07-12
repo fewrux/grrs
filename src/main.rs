@@ -20,7 +20,9 @@ fn main() -> grrs::Result<()> {
     trace!("configuring logger");
     let mut builder = grrs::config_logger(&args);
 
-    let file_size = std::fs::metadata(&args.path)?.len();
+    let file_size = std::fs::metadata(&args.path)
+        .with_context(|| format!("could not read file `{}`", args.path.display()))?
+        .len();
 
     trace!("opening file - size: {}", file_size);
     let content = std::fs::read_to_string(&args.path)
@@ -44,5 +46,12 @@ mod tests {
         let mut result = Vec::new();
         grrs::find_matches("lorem ipsum\ndolor sit amet", "lorem", &mut result);
         assert_eq!(result, b"lorem ipsum\n");
+    }
+
+    #[test]
+    fn should_not_find_a_match() {
+        let mut result = Vec::new();
+        grrs::find_matches("lorem ipsum\ndolor sit amet", "foo", &mut result);
+        assert_eq!(result, b"");
     }
 }
