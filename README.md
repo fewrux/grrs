@@ -97,12 +97,12 @@ Feel free to adjust the verbosity flag commands or provide additional examples t
 
 <strong>grrs</strong> has the following dependencies:
 
--   [clap](https://crates.io/crates/clap) - A powerful and flexible command-line argument parsing library for Rust. It is used to parse command-line arguments.
 -   [anyhow](https://crates.io/crates/anyhow) - A library for representing and handling errors in a convenient way. It is used to handle errors and provide meaningful error messages.
--   [indicatif](https://crates.io/crates/indicatif) - A library for creating interactive command-line progress bars. It is used to display the progress of reading the file.
--   [log](https://crates.io/crates/log) - A lightweight logging facade for Rust. It is used for logging messages at different verbosity levels.
--   [env_logger](https://crates.io/crates/env_logger) - A logger implementation for the log crate that is based on environment variables. It is used to configure and display log messages.
+-   [clap](https://crates.io/crates/clap) - A powerful and flexible command-line argument parsing library for Rust. It is used to parse command-line arguments.
 -   [clap-verbosity-flag](https://crates.io/crates/clap-verbosity-flag) - A library for parsing verbosity level command-line arguments. It is used to set the verbosity level of the logger.
+-   [env_logger](https://crates.io/crates/env_logger) - A logger implementation for the log crate that is based on environment variables. It is used to configure and display log messages.
+-   [log](https://crates.io/crates/log) - A lightweight logging facade for Rust. It is used for logging messages at different verbosity levels.
+<!--- [indicatif](https://crates.io/crates/indicatif) - A library for creating interactive command-line progress bars. It is used to display the progress of reading the file. --->
 
 <br>
 
@@ -112,13 +112,13 @@ To add these dependencies to your project, include the following lines in your `
 
 ```
 [dependencies]
-clap = { version = "4.2.7", features = ["derive"] }
 anyhow = "1.0.71"
-indicatif = "0.17.3"
-log = "0.4.17"
-env_logger = "0.10.0"
+clap = { version = "4.2.7", features = ["derive"] }
 clap-verbosity-flag = "2.0.1"
+env_logger = "0.10.0"
+log = "0.4.17"
 ```
+<!--- indicatif = "0.17.3" --->
 
 You can then build and compile the project using the `cargo build` command.
 
