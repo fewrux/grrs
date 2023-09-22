@@ -65,7 +65,7 @@ Replace <pattern> with the pattern you want to search for, and <path_to_file> wi
 
 ## Examples
 
--   Search for the pattern "error" in the file `/path/to/file.log` and display only the lines containing the pattern (silencing the output):
+-   Search for the pattern error in the file `/path/to/file.log` and display only the lines containing the pattern (silencing the output):
 
 ```
 $ ./target/release/grrs "error" /path/to/file.log -q
@@ -76,7 +76,7 @@ $ ./target/release/grrs "error" /path/to/file.log -q
 -   Search for the pattern "TODO" in the directory `/path/to/project`, showing warnings and info messages:
 
 ```
-$ ./target/release/grrs "TODO" /path/to/project -vv
+$ ./target/release/grrs TODO /path/to/project -vv
 ```
 
 <br>
