@@ -65,10 +65,10 @@ Replace <pattern> with the pattern you want to search for, and <path_to_file> wi
 
 ## Examples
 
--   Search for the pattern error in the file `/path/to/file.log` and display only the lines containing the pattern (silencing the output):
+-   Search for the pattern "error" in the file `/path/to/file.log` and display only the lines containing the pattern (silencing the output):
 
 ```
-$ ./target/release/grrs "error" /path/to/file.log -q
+$ ./target/release/grrs error /path/to/file.log -q
 ```
 
 <br>
