@@ -1,6 +1,6 @@
 # grrs
 
-<strong>grrs</strong> is a CLI search tool implemented in <strong>Rust</strong>. It allows you to search for a pattern in a file and display the lines that contain it.
+<strong>grrs</strong> is a command-line search tool implemented in <strong>Rust</strong>. It allows you to search for a pattern in a file and display the lines that contain it.
 
 <br>
 
